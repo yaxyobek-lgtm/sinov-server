@@ -1,26 +1,36 @@
-require('dotenv').config();
 const { Telegraf } = require('telegraf');
-const express = require('express');
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
+const BOT_TOKEN = '8069097295:AAEjGxeifBH3zkrcAYMmOL1P_Zo7esdKgsI';
+const bot = new Telegraf(BOT_TOKEN);
 
-// Express server (ping uchun)
-const app = express();
-app.get('/', (req, res) => res.send('Bot ishlayapti!'));
-app.listen(process.env.PORT || 3000, () => {
-  console.log(`🌐 Server port ${process.env.PORT} da ishlayapti`);
-});
-
-// /start komandasi
+// /start
 bot.start((ctx) => {
-  const name = ctx.from.username ? `@${ctx.from.username}` : ctx.from.first_name;
-  ctx.reply(`👋 Salom, ${name}!`);
+  const name = ctx.from.username
+    ? `@${ctx.from.username}`
+    : ctx.from.first_name;
+
+  ctx.reply(`Salom, ${name}! 👋`);
 });
 
-// Foydalanuvchi yuborgan xabarni echo qilish
+// Echo
 bot.on('text', (ctx) => {
   ctx.reply(ctx.message.text);
 });
 
-bot.launch();
-console.log('🤖 Salom + Echo bot ishlayapti...');
+// Ishga tushirish
+bot.launch()
+  .then(() => console.log('🤖 Bot ishga tushdi'))
+  .catch(err => console.log('❌ Xato:', err));
+
+// Render uchun (server uxlab qolmasligi uchun)
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+  res.send('Bot ishlayapti 🚀');
+});
+
+app.listen(PORT, () => {
+  console.log(`🌐 Server ${PORT} portda`);
+});
